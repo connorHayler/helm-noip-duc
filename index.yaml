@@ -1,0 +1,16 @@
+apiVersion: v1
+entries:
+  noip-duc:
+  - apiVersion: v2
+    appVersion: 3.2.0
+    created: "2024-09-06T19:38:47.76202728Z"
+    description: Keep your current IP address in sync with your No-IP host or domain
+      with our Dynamic Update Client (DUC).
+    digest: 757212e28debfe2f41e476f50249acf3759487389f882f74ede5bb3150f3eade
+    home: https://www.noip.com/download?page=linux
+    icon: https://d2qr50rz2oof04.cloudfront.net/assets/img/logo/logo-white.png
+    name: noip-duc
+    urls:
+    - https://github.com/connorHayler/helm-noip-duc/releases/download/noip-duc-0.1.0/noip-duc-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-09-06T19:38:47.762057286Z"
