@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/version: {{ .Chart.AppVersion }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
+    spec:
+      containers:
+      - image: {{ .Values.image.repository }}{{ .Values.image.name }}:{{ .Values.image.version }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Chart.Name }}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.cpu.request }}
+            memory: {{ .Values.resources.memory.request }}
+        env:
+          - name: NOIP_HOSTNAMES
+            value: {{ .Values.config.hostnames}}
+          - name: NOIP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Chart.Name }}-secrets
+                key: username
+          - name: NOIP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Chart.Name }}-secrets
+                key: password
+        {{- if .Values.config.checkInterval }}
+          - name: NOIP_CHECK_INTERVAL
+            value: {{ .Values.config.checkInterval }}
+        {{- end }}
+        {{- if (.Values.config.daemon).group }}
+          - name: NOIP_DAEMON_GROUP
+            value: {{ .Values.config.daemon.group }}
+        {{- end }}
+        {{- if (.Values.config.daemon).pidFile }}
+          - name: NOIP_DAEMON_PID_FILE
+            value: {{ .Values.config.daemon.pidFile }}
+        {{- end }}
+        {{- if (.Values.config.daemon).user }}
+          - name: NOIP_DAEMON_USER
+            value: {{ .Values.config.daemon.user }}
+        {{- end }}
+        {{- if .Values.config.execOnChange }}
+          - name: NOIP_EXEC_ON_CHANGE
+            value: {{ .Values.config.execOnChange }}
+        {{- end }}
+        {{- if .Values.config.httpTimeout }}
+          - name: NOIP_HTTP_TIMEOUT
+            value: {{ .Values.config.httpTimeout }}
+        {{- end }}
+        {{- if .Values.config.method }}
+          - name: NOIP_IP_METHOD
+            value: {{ .Values.config.method }}
+        {{- end }}
+        {{- if .Values.config.logLevel }}
+          - name: NOIP_LOG_LEVEL
+            value: {{ .Values.config.logLevel }}
+        {{- end }}
